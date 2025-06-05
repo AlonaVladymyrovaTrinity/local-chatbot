@@ -101,10 +101,11 @@ You'll get a response from the AI model
 - Model installed: mistral (or your choice)
 
 ### 🙌 Acknowledgments
-[Ollama](https://ollama.com/) – for local model running
-[Mistral](https://mistral.ai/) – the conversational model
-[Tailwind CSS](https://tailwindcss.com/) – fast styling
-[React](https://react.dev/) – frontend framework
+
+- [Ollama](https://ollama.com/) – for local model running
+- [Mistral](https://mistral.ai/) – the conversational model
+- [Tailwind CSS](https://tailwindcss.com/) – fast styling
+- [React](https://react.dev/) – frontend framework
 
 ### 📄 License
 This project is for ***personal/local use only***. Check individual model licenses (like Mistral or LLaMA) for usage terms.
