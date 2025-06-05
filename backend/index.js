@@ -18,12 +18,25 @@ app.post('/chat', async (req, res) => {
       body: JSON.stringify({
         model: 'mistral',
         prompt: userMessage,
-        stream: false,
+        stream: true,
       }),
     });
 
-    const data = await response.json();
-    return res.json({ response: data.response.trim() });
+    res.setHeader('Content-Type', 'text/plain');
+
+    for await (const chunk of ollamaRes.body) {
+      const decoded = new TextDecoder().decode(chunk);
+      const lines = decoded.trim().split('\n');
+
+      for (const line of lines) {
+        if (!line) continue;
+        const json = JSON.parse(line);
+        if (json.done) return;
+        if (json.response) res.write(json.response);
+      }
+    }
+
+    res.end();
   } catch (err) {
     console.error('Error contacting Ollama API:', err);
     return res.status(500).json({ response: 'Error running model via API' });
