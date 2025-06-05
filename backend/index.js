@@ -24,7 +24,7 @@ app.post('/chat', async (req, res) => {
 
     res.setHeader('Content-Type', 'text/plain');
 
-    for await (const chunk of ollamaRes.body) {
+    for await (const chunk of response.body) {
       const decoded = new TextDecoder().decode(chunk);
       const lines = decoded.trim().split('\n');
 
@@ -35,7 +35,7 @@ app.post('/chat', async (req, res) => {
         if (json.response) res.write(json.response);
       }
     }
-
+      
     res.end();
   } catch (err) {
     console.error('Error contacting Ollama API:', err);

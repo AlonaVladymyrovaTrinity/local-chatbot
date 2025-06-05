@@ -1,31 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const endOfMessagesRef = useRef(null);
+
+  useEffect(() => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
+  
     const userMsg = { sender: 'user', text: input };
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
-
+  
+    let result = '';
+    const botIndex = messages.length + 1;
+  
+    setMessages((prev) => [
+      ...prev,
+      { sender: 'bot', text: '' }
+    ]);
+  
     try {
       const res = await fetch('http://localhost:3001/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input }),
       });
-
-      const data = await res.json();
-      const botMsg = { sender: 'bot', text: data.response };
-      setMessages((prev) => [...prev, botMsg]);
+  
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+  
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+  
+        const chunk = decoder.decode(value, { stream: true });
+        result += chunk;
+  
+        const updated = result;
+        setMessages((prev) =>
+          prev.map((msg, i) =>
+            i === botIndex ? { ...msg, text: updated } : msg
+          )
+        );
+      }
     } catch (err) {
-      const errorMsg = { sender: 'bot', text: '⚠️ Error talking to the AI.' };
-      setMessages((prev) => [...prev, errorMsg]);
+      setMessages((prev) => [
+        ...prev,
+        { sender: 'bot', text: '⚠️ Error talking to the AI.' },
+      ]);
+    } finally {
     }
   };
+  
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') sendMessage();
@@ -37,7 +70,7 @@ function App() {
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`p-2 rounded max-w-[75%] ${
+            className={`p-2 rounded max-w-[75%] whitespace-pre-wrap ${
               msg.sender === 'user'
                 ? 'bg-blue-100 ml-auto text-right'
                 : 'bg-green-100 mr-auto text-left'
@@ -46,6 +79,7 @@ function App() {
             {msg.text}
           </div>
         ))}
+        <div ref={endOfMessagesRef} />
       </div>
 
       <div className="w-full max-w-xl flex mt-4">
