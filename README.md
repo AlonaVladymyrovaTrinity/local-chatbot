@@ -10,6 +10,12 @@ No cloud, no API keys, no data sharing — 100% private AI.
 
 ---
 
+## 🖼️ Demo Screenshot
+
+![Chatbot UI Demo](./assets/demo.png)
+
+---
+
 ## 🚀 Features
 
 - 🔁 Real-time chat interface with a local AI model
