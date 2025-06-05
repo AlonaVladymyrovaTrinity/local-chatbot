@@ -71,13 +71,13 @@ Frontend will run at:
 
 ### 📦 Project Structure
 
-local-chatbot/
+```local-chatbot/
 ├── backend/            # Node.js + Express API
 │   └── index.js
 ├── frontend/           # React app with Tailwind CSS
 │   ├── src/
 │   └── tailwind.config.js
-├── README.md
+├── README.md```
 
 ### 🧪 Example Usage
 
