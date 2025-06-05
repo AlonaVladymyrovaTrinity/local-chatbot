@@ -77,7 +77,8 @@ Frontend will run at:
 ├── frontend/           # React app with Tailwind CSS
 │   ├── src/
 │   └── tailwind.config.js
-├── README.md```
+├── README.md
+```
 
 ### 🧪 Example Usage
 
